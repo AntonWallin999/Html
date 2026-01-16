@@ -1,43 +1,32 @@
-name: Build and Deploy Pages
+name: Pages
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
+      - name: Checka ut repo
         uses: actions/checkout@v4
 
-      - name: Generate index
+      - name: Generera Html/index.html
         run: python3 generate_index.py
 
-      - name: Commit index
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add index.html
-          git commit -m "Auto-generate index" || true
-          git push
-
-      - name: Upload Pages artifact
+      - name: Ladda upp Pages-artifact (endast Html/)
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: Html
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
-
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Publicera till GitHub Pages
         uses: actions/deploy-pages@v4
